@@ -45,6 +45,9 @@ static const int kernel_feature_bits[] = {
     VIRTIO_NET_F_MTU,
     VIRTIO_F_IOMMU_PLATFORM,
     VIRTIO_F_RING_PACKED,
+    VIRTIO_NET_F_TX_HASH,
+    VIRTIO_NET_F_RX_TSTAMP,
+    VIRTIO_NET_F_TX_TSTAMP,
     VHOST_INVALID_FEATURE_BIT
 };
 

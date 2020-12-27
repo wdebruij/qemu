@@ -57,6 +57,9 @@
 					 * Steering */
 #define VIRTIO_NET_F_CTRL_MAC_ADDR 23	/* Set MAC address */
 
+#define VIRTIO_NET_F_TX_TSTAMP	  54	/* Guest sets TAI delivery time */
+#define VIRTIO_NET_F_RX_TSTAMP	  55	/* Host sends TAI receive time */
+#define VIRTIO_NET_F_TX_HASH	  56	/* Guest sends hash report */
 #define VIRTIO_NET_F_HASH_REPORT  57	/* Supports hash report */
 #define VIRTIO_NET_F_RSS	  60	/* Supports RSS RX steering */
 #define VIRTIO_NET_F_RSC_EXT	  61	/* extended coalescing info */
@@ -170,8 +173,26 @@ struct virtio_net_hdr_v1_hash {
 #define VIRTIO_NET_HASH_REPORT_IPv6_EX         7
 #define VIRTIO_NET_HASH_REPORT_TCPv6_EX        8
 #define VIRTIO_NET_HASH_REPORT_UDPv6_EX        9
+#define VIRTIO_NET_HASH_REPORT_L4              10
+#define VIRTIO_NET_HASH_REPORT_OTHER           11
 	uint16_t hash_report;
-	uint16_t padding;
+	union {
+		uint16_t padding;
+#define VIRTIO_NET_HASH_STATE_DEFAULT          0
+#define VIRTIO_NET_HASH_STATE_TIMEOUT_BIT      0x1
+		uint16_t hash_state;
+	};
+};
+
+struct virtio_net_hdr_v12 {
+	struct virtio_net_hdr_v1 hdr;
+	struct {
+		uint32_t value;
+		uint16_t report;
+		uint16_t  flow_state;
+	} hash;
+	uint32_t reserved;
+	uint64_t tstamp;
 };
 
 #ifndef VIRTIO_NET_NO_LEGACY
